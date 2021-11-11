@@ -1,0 +1,68 @@
+.search-results {
+  display: flex;
+  flex-direction: column;
+  max-width: 95vw;
+  
+  margin: 0 auto 3rem;
+  margin-bottom: 3rem;
+  &__title {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 45%;
+
+    color: rgba(109, 89, 122, .2);
+    font-size: 8rem;
+    line-height: 0.37;
+    font-weight: 800;
+    text-align: center;
+    
+    transform: rotateZ(70deg);
+
+   
+    @include tablet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 18%;
+      line-height: 0.37;
+
+      font-size: 11rem;
+
+      z-index: -1;
+      opacity: 0.6;
+      transform: rotateZ(0);
+    }
+    @include desktop {
+      font-size: 21rem;
+    }
+  }
+}
+
+// position: absolute;
+// left: 0;
+// right: 0;
+// bottom: 0;
+// margin-bottom: 3rem;
+
+// color: #53455c;
+// font-size: 21rem;
+// font-weight: 800;
+// text-align: center;
+
+// z-index: -1;
+// opacity: 0.6;
+
+
+// $light-cornflower-blue: rgba(142, 202, 230, 1);
+// $blue-green: rgba(33, 158, 188, 1);
+// $prussian-blue: rgba(2, 48, 71, 1);
+// $honey-yellow: rgba(255, 183, 3, 1);
+// $orange: rgba(251, 133, 0, 1);
+// $orange-55: rgba(251, 133, 0, .55);
+
+// $y-in-mn-blue: rgba(53, 80, 112, 1);
+// $chinese-violet: rgba(109, 89, 122, 1);
+// $rose-dust: rgba(181, 101, 118, 1);
+// $candy-pink: rgba(229, 107, 111, 1);
+// $tumbleweed: rgba(234, 172, 139, 1);

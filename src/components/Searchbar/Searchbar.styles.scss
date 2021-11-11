@@ -1,0 +1,23 @@
+.search {
+  @include flex-center;
+  width: 80%;
+  margin-top: 5rem;
+
+  &__input{
+    height: 2.785rem;
+    min-width: 14rem;
+    width: 80%;
+    padding: 1rem 2rem;
+
+    background-color: $rose-dust;
+    // background-color: $candy-pink;
+    // background-color: $chinese-violet;
+    
+    font-weight: 500;
+    color: $y-in-mn-blue;
+
+    &::placeholder{
+      color: $candy-pink;
+    }
+  }
+}

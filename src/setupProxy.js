@@ -5,5 +5,10 @@ module.exports = function (app) {
     `/auth/**`, 
     createProxyMiddleware({ 
       target: 'http://localhost:5000' 
+  })),
+  app.use(
+    `/search/**`, 
+    createProxyMiddleware({ 
+      target: 'http://localhost:5000' 
   }));
 };

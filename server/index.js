@@ -2,37 +2,41 @@ require('dotenv').config()
 const express = require('express')
 const cors = require("cors")
 const request = require('request');
+const axios = require('axios');
 
 const port = 5000
 
-var spotify_client_id = process.env.SPOTIFY_CLIENT_ID
-var spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET
+const spotify_client_id = process.env.SPOTIFY_CLIENT_ID
+const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET
 
-var app = express();
+let access_token = '';
+let expires_in = ''
+let refresh_token = ''
+
+const app = express();
 app.use(cors())
 
-var generateRandomString = function (length) {
-  var text = '';
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const generateRandomString = function (length) {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-  for (var i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
   return text;
 };
 
-let access_token = '';
-
-
 app.get('/auth/login', (req, res) => {
 
-  var scope = "streaming \
+  const scope = "streaming \
                user-read-email \
-               user-read-private"
+               user-read-private \
+               user-read-playback-state \
+               user-modify-playback-state"
 
-  var state = generateRandomString(16);
+  const state = generateRandomString(16);
 
-  var auth_query_parameters = new URLSearchParams({
+  const auth_query_parameters = new URLSearchParams({
     response_type: "code",
     client_id: spotify_client_id,
     scope: scope,
@@ -46,9 +50,9 @@ app.get('/auth/login', (req, res) => {
 
 app.get('/auth/callback', (req, res) => {
 
-  var code = req.query.code;
+  const code = req.query.code;
 
-  var authOptions = {
+  const authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     form: {
       code: code,
@@ -65,17 +69,87 @@ app.get('/auth/callback', (req, res) => {
   request.post(authOptions, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       access_token = body.access_token;
+      expires_in = body.expires_in;
+      refresh_token = body.refresh_token;
       res.redirect('/')
     }
   });
 });
 
+app.use('/auth/refreshToken', (req, res) => { 
+  const refresh_token = req.query.refresh_token;
+
+  const authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+    form: {
+      grant_type: 'refresh_token',
+      refresh_token: refresh_token
+    },
+    json: true
+  };
+
+  request.post(authOptions, function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      access_token = body.access_token;
+      expires_in = body.expires_in;
+      refresh_token = body.refresh_token;
+      res.redirect('/')
+    }
+  });
+})
+
+
 app.use('/auth/token', (req, res) => {
   res.json(
-     {
-        access_token: access_token
-     })
+    {
+      access_token: access_token,
+      expires_in: expires_in,
+      refresh_token: refresh_token
+    })
 })
+
+app.get('/search/track', async (req, res) => {
+  try {
+    const trackUrl = req.headers.href
+    const data = await axios.get(trackUrl, {
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json',
+      }
+    })
+    console.log(data);
+    res.json(data.data)
+  } catch (e){
+    console.error(e)
+    res.end()
+  }
+
+})
+
+app.get('/search/query/:query', async (req, res) => {
+  try {
+    const { query } = req.params;
+    const data = await axios.get(`https://api.spotify.com/v1/search?q=${query.toLowerCase()}&type=album,track`, {
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json',
+      }
+    })
+
+    res.send({
+      tracks : data.data.tracks.items,
+      albums : data.data.albums.items
+    })    
+  } catch (e){
+    console.error(e)
+    res.end()
+  }
+})
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`)

@@ -1,0 +1,40 @@
+.card {
+  display: flex;
+  margin: 0 2rem 1.255rem;
+  padding: 1rem;
+
+  background-color: $black-35;
+  
+  &__img{
+    width: auto;
+    height: 55px;
+    object-fit: cover;
+    margin-right: 1rem;
+  }
+  &__meta{
+    @include flex-center;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+
+    .card__title,
+    .card__author {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      // color: $blue-green;
+      
+    }
+
+    .card__title {
+      font-weight: 800;
+      color: $rose-dust;
+    }
+
+    .card__author {
+      color: $chinese-violet;
+    }
+  }
+} 
