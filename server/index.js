@@ -111,18 +111,20 @@ app.use('/auth/token', (req, res) => {
 
 app.get('/search/track', async (req, res) => {
   try {
-    const trackUrl = req.headers.href
-    const data = await axios.get(trackUrl, {
+    const trackId = req.headers.trackid
+
+    const data = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
       headers: {
         'Authorization': 'Bearer ' + access_token,
         'Content-Type': 'application/json',
       }
     })
-    console.log(data);
     res.json(data.data)
   } catch (e){
     console.error(e)
-    res.end()
+    res.json({
+      error: 'No tracks founs'
+    })
   }
 
 })
@@ -136,14 +138,24 @@ app.get('/search/query/:query', async (req, res) => {
         'Content-Type': 'application/json',
       }
     })
-
-    res.send({
+    const results = {
       tracks : data.data.tracks.items,
       albums : data.data.albums.items
-    })    
+    }
+
+    if(results.tracks.length === 0) {
+      res.json({
+        error: 'No tracks founs'
+      })
+    }
+
+    res.json(results)  
   } catch (e){
     console.error(e)
-    res.end()
+    res.status(e.status).json({ 
+      status: e.status,
+      message: e.message
+    })
   }
 })
 

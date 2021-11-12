@@ -9,6 +9,9 @@
 @import '../components/Dashboard/Dashboard.styles.scss';
 @import '../components/Player/Player.styles.scss';
 @import '../components/Card/Card.styles.scss';
+@import '../components/ErrorCard/ErrorCard.styles.scss';
+@import '../components/PlayingTrackHeader/PlayingTrackHeader.styles.scss';
+@import '../components/TrackCover/TrackCover.styles.scss';
 
 *, *::before, *::after {
   font-family: Archivo;
@@ -28,6 +31,7 @@ body {
 .container {
   width: 100vw;
   height: 95vh;
+  postion: relative;
 
   @include flex-center;
 }

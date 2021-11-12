@@ -2,38 +2,47 @@ import { useState, useEffect } from "react";
 
 import Searchbar from "../Searchbar/Searchbar.component";
 import SearchResults from "../SearchResults/SearchResults.component";
+import ErrorCard from "../ErrorCard/ErrorCard.component";
 
 const Dashboard = ({ setPlayingTrack }) => { 
   const [ searchQuery, setSearchQuery ] = useState();
   const [ tracks, setTracks ] = useState([]);
   const [ albums, setAlbums ] = useState([]);
+  const [ hasErrored, setHasErrored ] = useState(false);
   // const [ uri, setUri ] = useState('');
 
   useEffect(() => {
     const fetchFromQuery = async () => { 
-      const searchResults = await fetch(`/search/query/${searchQuery}`)
-      const data = await searchResults.json()
-      console.log(data.tracks)
-      setTracks(data.tracks)
+      try {
+        const data = await fetch(`/search/query/${searchQuery}`)
+        const searchResults = await data.json()
+        if(searchResults.error) {
+          return setHasErrored(true)
+        }
+        return setTracks(searchResults.tracks)
+      } catch(e) {
+        console.log('error')
+      }
     }
 
     if(searchQuery) {
       fetchFromQuery()
     }
   }, [searchQuery])
-  console.log(tracks)
+  
   return (
     <>
       <Searchbar setSearchQuery={setSearchQuery} />
 
       <article className="results-container">
-        {tracks.length > 0 && <SearchResults tracks={tracks} resultCategory='Tracks' setPlayingTrack={setPlayingTrack} /> }
+        {hasErrored && <ErrorCard message='Sorry, no results where found for your query.' />}
+        {!hasErrored && <SearchResults tracks={tracks} resultCategory='Tracks' setPlayingTrack={setPlayingTrack} /> }
         <h3 
           className='search-results__title'>
           {tracks.length > 0 
             ? 'Tracks' 
             : `Jazz
-              drome`
+              dome`
           }
         </h3>
 

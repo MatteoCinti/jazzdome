@@ -1,0 +1,47 @@
+.playing-track {
+  position: absolute;
+  top: .825rem;
+  width: 100%;
+  overflow: hidden;
+  background-color: $black-35;
+  padding: 1rem 0;
+
+  &__animate{
+    @include flex-center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    animation: floatText 40s linear infinite;
+
+    & > * {
+      margin-right: 1rem;
+    }
+  }
+
+  
+  &__header{
+    width: auto;
+    font-size: 0.925rem;
+    font-weight: 500;
+    color: $chinese-violet;
+  }
+
+  &__title{
+    color: $candy-pink;
+  }
+  &__artists{
+    color: $rose-dust;
+    font-weight: 400;
+  }
+
+}
+
+@keyframes floatText {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-110%);
+  }
+}

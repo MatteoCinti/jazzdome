@@ -1,7 +1,6 @@
 import Card from '../Card/Card.component'
 
 const SearchResults = ({ tracks, resultCategory, setPlayingTrack }) => {
-  console.log(tracks)
   return (
     <section className="search-results">
 
