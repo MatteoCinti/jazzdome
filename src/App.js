@@ -25,7 +25,6 @@ function App() {
         console.error(err)
       }
     }
-
     getToken();
   }, []);
   
@@ -68,7 +67,6 @@ function App() {
 
   }, [token])
   
-
   return (
     <main className="app">
 

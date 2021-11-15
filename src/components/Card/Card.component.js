@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 const Card = ({ data, setPlayingTrack }) => { 
   const imgUrl = data.album.images[1].url || data.album.images[0].url
-  console.log(data)
 
   return (
     <div className="card" onClick={() => setPlayingTrack(data)}>

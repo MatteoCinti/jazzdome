@@ -144,23 +144,17 @@ app.get('/search/query/:query', async (req, res) => {
     }
 
     if(results.tracks.length === 0) {
-      res.json({
-        error: 'No tracks founs'
-      })
+     throw new Error('No tracks found')
     }
 
     res.json(results)  
   } catch (e){
     console.error(e)
-    res.status(e.status).json({ 
-      status: e.status,
-      message: e.message
+    res.status(400).json({ 
+      error: e.message
     })
   }
 })
-
-
-
 
 
 app.listen(port, () => {
